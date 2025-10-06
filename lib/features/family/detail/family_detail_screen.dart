@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/providers.dart';
@@ -24,7 +23,11 @@ class _FamilyDetailScreenState extends ConsumerState<FamilyDetailScreen> {
   Future<void> _load() async {
     final repo = ref.read(memberRepoProvider);
     final data = await repo.getByFamilyLocal(widget.familyId);
+    if (!mounted) return;
     setState(() => members = data);
+    // Temporary debug:
+    // ignore: avoid_print
+    print('Family ${widget.familyId} member count = ${members.length}');
   }
 
   @override
@@ -38,7 +41,8 @@ class _FamilyDetailScreenState extends ConsumerState<FamilyDetailScreen> {
           final m = members[i];
           return ListTile(
             title: Text('${m.firstName} ${m.lastName}'),
-            subtitle: Text('Relation: ${m.relationId}  Marital: ${m.maritalStatusId}'),
+            subtitle: Text(
+                'Relation: ${m.relationId}  Marital: ${m.maritalStatusId}'),
           );
         },
       ),
